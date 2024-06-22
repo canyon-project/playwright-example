@@ -44,7 +44,7 @@ jsonFiles.forEach((file,index) => {
 
 for (const [key,value] of map) {
     // fs.writeFileSync(key+'.json',JSON.stringify(value))
-    await fetch('https://app.canyoncov.com/coverage/client',{
+    fetch('https://app.canyoncov.com/coverage/client',{
         method:'POST',
         body:JSON.stringify(value),
         headers: {
