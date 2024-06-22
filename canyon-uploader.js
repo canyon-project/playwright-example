@@ -40,7 +40,6 @@ jsonFiles.forEach((file,index) => {
     }
 });
 
-// console.log(map)
 
 for (const [key,value] of map) {
     // fs.writeFileSync(key+'.json',JSON.stringify(value))
