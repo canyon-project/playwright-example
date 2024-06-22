@@ -1,19 +1,22 @@
-// @ts-check
 const { test, expect } = require('@playwright/test');
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+// 在每个测试用例结束之前执行的函数
+test.afterEach(async ({ page }, testInfo) => {
+  console.log(`Test ${testInfo.title} finished`);
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
+  // 在此处执行任何你希望在每个测试用例结束前运行的代码
+  // 例如，清理操作或日志记录
+  const res = await page.evaluate(()=>{
+    return window.reportCoverage()
+  })
+  console.log(res)
+  await page.screenshot({ path: `screenshots/${testInfo.title}.png` });
 });
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+test('has title', async ({ page }) => {
+  await page.goto('https://todolist-production-c9e8.up.railway.app/');
+  // 查找并点击 a 标签
+  // await page.click('a');
+  // Expect a title "to contain" a substring.
+  await expect(page).toHaveTitle(/React/);
 });
