@@ -17,8 +17,12 @@ jobs:
       run: npm install -g pnpm && pnpm install
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
+    - name: Run Canyon collector
+      run: node canyon-collector.js
     - name: Run Playwright tests
       run: pnpm exec playwright test
+    - name: Run Canyon uploader
+      run: node canyon-uploader.js
     - uses: actions/upload-artifact@v4
       if: always()
       with:
