@@ -14,11 +14,11 @@ jobs:
       with:
         node-version: lts/*
     - name: Install dependencies
-      run: npm install -g pnpm && pnpm install
+      run: npm install -g pnpm pm2 && pnpm install
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
     - name: Run Canyon collector
-      run: node canyon-collector.js
+      run: pm2 start canyon-collector.js
     - name: Run Playwright tests
       run: pnpm exec playwright test
     - name: Run Canyon uploader
