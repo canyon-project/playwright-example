@@ -6,18 +6,25 @@ test.afterEach(async ({ page }, testInfo) => {
   // console.log(page)
   // 在此处执行任何你希望在每个测试用例结束前运行的代码
   // 例如，清理操作或日志记录
-  const res = await page.evaluate(()=>{
-    return window.reportCoverage()
-  })
-  console.log(res)
+  // const res = await page.evaluate(()=>{
+  //   return window.reportCoverage()
+  // })
+  // console.log(res)
+
   await page.screenshot({ path: `screenshots/${testInfo.title}.png` });
 });
 
 test('has title', async ({ page }) => {
   await page.goto('https://todolist-production-c9e8.up.railway.app/');
   // 查找并点击 a 标签
-  // await page.click('a');
+  await page.evaluate(() => {
+    return window.reportCoverage()
+  })
+  await page.click('p>a');
   // Expect a title "to contain" a substring.
   // console.log(page.title)
-  await expect(page).toHaveTitle(/React/);
+  console.log('等你一秒start')
+  await page.waitForTimeout(1000)
+  console.log('等你一秒end')
+  await expect(page).toHaveTitle(/MVC/);
 });

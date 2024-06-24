@@ -9,6 +9,14 @@ app.use(express.static('public'))
 app.use(bodyParser.json({ extended: true }))
 
 const runtimePath = process.cwd();
+
+app.get('/vi/health',(req, res)=>{
+    console.log('健康检查')
+    res.send({
+        msg:'ok'
+    })
+})
+
 app.post('/coverage/client',(req, res)=>{
     console.log('请求到了'+new Date(),path.join(runtimePath, 'public/data.json'))
     fs.writeFileSync(path.join(runtimePath, `public/${new Date().valueOf()}.json`),JSON.stringify(req.body))
@@ -17,6 +25,6 @@ app.post('/coverage/client',(req, res)=>{
     })
 })
 
-app.listen(3000,()=>{
+app.listen(30614,()=>{
     console.log('start')
 })
