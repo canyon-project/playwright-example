@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const libCoverage = require('istanbul-lib-coverage')
+
 function mergeCoverageMap(first, second) {
     const map = libCoverage.createCoverageMap(JSON.parse(JSON.stringify(first)));
     map.merge(second);
@@ -9,7 +10,7 @@ function mergeCoverageMap(first, second) {
 
 
 // 定义 public 目录的路径
-const publicDir = path.join(__dirname, 'public');
+const publicDir = path.join(__dirname, '.canyon_output');
 
 // 读取 public 目录的内容
 const files = fs.readdirSync(publicDir);
@@ -19,38 +20,51 @@ const jsonFiles = files.filter(file => path.extname(file).toLowerCase() === '.js
 
 // 读取每个 JSON 文件
 const map = new Map()
-if (jsonFiles.length===0){
-    console.log('没找到覆盖率数据')
+if (jsonFiles.length === 0) {
+    console.log('canyon: no coverage files found in .canyon_output')
 }
-jsonFiles.forEach((file,index) => {
+jsonFiles.forEach((file, index) => {
+
     const filePath = path.join(publicDir, file);
 
-    const jsondata =  fs.readFileSync(filePath, 'utf8');
-    // console.log(index,jsondata)
-    const projectID = JSON.parse(jsondata).projectID
-    if (map.get(projectID)){
-        // map.get(projectID).push(JSON.parse(jsondata))
-        const cov = {
-            ...map.get(projectID),
-            coverage:mergeCoverageMap(map.get(projectID).coverage,JSON.parse(jsondata).coverage)
+    const jsondata = fs.readFileSync(filePath, 'utf8');
+
+    // 检查文件格式
+    if (jsondata) {
+        try {
+            const data = JSON.parse(jsondata)
+            if (data.dsn && data.reporter && data.coverage && data.projectID && data.commitSha && data.instrumentCwd) {
+                const projectID = data.projectID
+                if (map.get(projectID)) {
+                    const cov = {
+                        ...map.get(projectID),
+                        coverage: mergeCoverageMap(map.get(projectID).coverage, data.coverage)
+                    }
+                    map.set(projectID, cov)
+                } else {
+                    map.set(projectID, data)
+                }
+            } else {
+                console.log('格式不正确')
+            }
+
+
+        } catch (e) {
+            console.log('不是json数据')
         }
-        map.set(projectID,cov)
-    } else {
-        map.set(projectID,JSON.parse(jsondata))
     }
 });
 
 
-for (const [key,value] of map) {
-    // fs.writeFileSync(key+'.json',JSON.stringify(value))
-    fetch('https://app.canyoncov.com/coverage/client',{
-        method:'POST',
-        body:JSON.stringify(value),
+for (const [key, value] of map) {
+    fetch(value.dsn, {
+        method: 'POST',
+        body: JSON.stringify(value),
         headers: {
-            Authorization:`Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndyX3poYW5nMjUiLCJpZCI6MTAxMjA1ODAsImlhdCI6MTcxODQzMjc1OSwiZXhwIjoyMDM0MDA4NzU5fQ.2C7hUfC_uVykgvr4y4cw3SW9BO5K187921IVdrFGY9c`,
+            Authorization: `Bearer ${value.reporter}`,
             'Content-Type': 'application/json' // 指定请求头中的内容类型为 JSON
         },
-    }).then(res=>res.json()).then(data=>{
+    }).then(res => res.json()).then(data => {
         console.log(data)
     })
 }

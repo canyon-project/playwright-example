@@ -1,4 +1,5 @@
-const { test, expect } = require('@playwright/test');
+// const { expect } = require('@playwright/test');
+import {expect, test} from './baseFixtures';
 
 // 在每个测试用例结束之前执行的函数
 test.afterEach(async ({ page }, testInfo) => {
@@ -16,15 +17,9 @@ test.afterEach(async ({ page }, testInfo) => {
 
 test('has title', async ({ page }) => {
   await page.goto('https://todolist-production-c9e8.up.railway.app/');
-  // 查找并点击 a 标签
-  await page.evaluate(() => {
-    return window.reportCoverage()
-  })
+
+
   await page.click('p>a');
-  // Expect a title "to contain" a substring.
-  // console.log(page.title)
-  console.log('等你一秒start')
-  await page.waitForTimeout(1000)
-  console.log('等你一秒end')
+
   await expect(page).toHaveTitle(/MVC/);
 });
