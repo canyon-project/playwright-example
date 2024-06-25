@@ -23,7 +23,7 @@ jobs:
       run: |
         # Replace `linux` below with the appropriate OS
         # Options are `alpine`, `linux`, `macos`, `windows`
-        curl -o uploader https://cli.codecov.io/latest/linux/codecov
+        curl -o uploader https://github.com/canyon-project/uploader/actions/runs/9658797330/artifacts/1634966254
         chmod +x uploader
         ./uploader
     - uses: actions/upload-artifact@v4
