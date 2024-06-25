@@ -8,7 +8,6 @@ function mergeCoverageMap(first, second) {
     return JSON.parse(JSON.stringify(map.toJSON()));
 }
 
-
 // 定义 public 目录的路径
 const publicDir = path.join(__dirname, '.canyon_output');
 
