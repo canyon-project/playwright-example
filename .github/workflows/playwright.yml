@@ -19,11 +19,11 @@ jobs:
       run: pnpm exec playwright install --with-deps
     - name: Run Playwright tests
       run: pnpm exec playwright test
-    - name: Upload coverage reports to Codecov
+    - name: Upload coverage reports to Canyon
       run: |
         # Replace `linux` below with the appropriate OS
         # Options are `alpine`, `linux`, `macos`, `windows`
-        curl -o uploader https://github.com/canyon-project/uploader/actions/runs/9658797330/artifacts/1634966254
+        curl -LOs https://github.com/canyon-project/uploader/releases/download/v0.0.1/uploader
         chmod +x uploader
         ./uploader
     - uses: actions/upload-artifact@v4
