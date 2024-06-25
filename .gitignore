@@ -5,3 +5,7 @@ node_modules/
 /playwright/.cache/
 
 .canyon_output
+
+pnpm-lock.yaml
+
+.idea

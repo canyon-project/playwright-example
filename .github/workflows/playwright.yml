@@ -1,9 +1,7 @@
 name: Playwright Tests
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 jobs:
   test:
     timeout-minutes: 60
@@ -21,14 +19,6 @@ jobs:
       run: pnpm exec playwright test
     - name: Upload coverage reports to Canyon
       run: |
-        # Replace `linux` below with the appropriate OS
-        # Options are `alpine`, `linux`, `macos`, `windows`
         curl -LOs https://github.com/canyon-project/uploader/releases/download/v0.0.1/uploader
         chmod +x uploader
         ./uploader
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
